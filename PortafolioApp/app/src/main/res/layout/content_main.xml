@@ -1,74 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.carlospinan.portafolioapp.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:id="@+id/nanodegreeAppsTextView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:text="@string/nanodegreeApps"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-    <Button
-        android:id="@+id/spotifyStreamerButton"
-        style="@style/NanodegreeButton"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/nanodegreeAppsTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="?android:attr/listPreferredItemHeightSmall"
-        android:text="@string/spotifyStreamerApp" />
+        <TextView
+            android:id="@+id/nanodegreeAppsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/nanodegreeApps"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <Button
-        android:id="@+id/scoresApp"
-        style="@style/NanodegreeButton"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/spotifyStreamerButton"
-        android:layout_centerHorizontal="true"
-        android:text="@string/footbalScoresApp" />
+        <Button
+            android:id="@+id/spotifyStreamerButton"
+            style="@style/NanodegreeButton"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nanodegreeAppsTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="?android:attr/listPreferredItemHeightSmall"
+            android:text="@string/spotifyStreamerApp" />
 
-    <Button
-        android:id="@+id/libraryApp"
-        style="@style/NanodegreeButton"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/scoresApp"
-        android:layout_centerHorizontal="true"
-        android:text="@string/libraryApp" />
+        <Button
+            android:id="@+id/scoresApp"
+            style="@style/NanodegreeButton"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spotifyStreamerButton"
+            android:layout_centerHorizontal="true"
+            android:text="@string/footbalScoresApp" />
 
-    <Button
-        android:id="@+id/buildItBigger"
-        style="@style/NanodegreeButton"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/libraryApp"
-        android:layout_centerHorizontal="true"
-        android:text="@string/buildItBiggerApp" />
+        <Button
+            android:id="@+id/libraryApp"
+            style="@style/NanodegreeButton"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/scoresApp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/libraryApp" />
 
-    <Button
-        android:id="@+id/xyzReader"
-        style="@style/NanodegreeButton"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/buildItBigger"
-        android:layout_centerHorizontal="true"
-        android:text="@string/xyzReaderApp" />
+        <Button
+            android:id="@+id/buildItBigger"
+            style="@style/NanodegreeButton"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/libraryApp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/buildItBiggerApp" />
+
+        <Button
+            android:id="@+id/xyzReader"
+            style="@style/NanodegreeButton"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/buildItBigger"
+            android:layout_centerHorizontal="true"
+            android:text="@string/xyzReaderApp" />
 
 
-    <Button
-        android:id="@+id/capstone"
-        style="@style/NanodegreeButtonMyApp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/xyzReader"
-        android:layout_centerHorizontal="true"
-        android:text="@string/myApp" />
+        <Button
+            android:id="@+id/capstone"
+            style="@style/NanodegreeButtonMyApp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/xyzReader"
+            android:layout_centerHorizontal="true"
+            android:text="@string/myApp" />
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</ScrollView>
