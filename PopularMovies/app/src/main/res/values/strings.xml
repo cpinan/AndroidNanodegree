@@ -7,4 +7,6 @@
 
     <string name="optionMostPopular" translatable="false">popularity.desc</string>
     <string name="optionHighestRated" translatable="false">vote_count.desc</string>
+    <string name="movie_detail">Movie Detail</string>
+    <string name="transitionNameId" translatable="false">transitionName%1$s</string>
 </resources>

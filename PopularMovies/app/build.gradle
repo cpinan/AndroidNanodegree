@@ -10,7 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-        buildConfigField "String", "MOVIE_DB_API_KEY", "\"NOT_API_HERE\""
+        buildConfigField "String", "MOVIE_DB_API_KEY", MOVIE_API_KEY
         buildConfigField "String", "BASE_URL", "\"https://api.themoviedb.org/3/\""
         buildConfigField "String", "IMAGE_URL", "\"http://image.tmdb.org/t/p/%s%s\""
     }

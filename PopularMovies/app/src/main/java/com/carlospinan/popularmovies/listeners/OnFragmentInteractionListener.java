@@ -9,5 +9,9 @@ public interface OnFragmentInteractionListener {
 
     boolean isTwoPane();
 
-    void showMovieDetail(MovieModel movieModel);
+    void showMovieDetail(MovieModel movieModel, String transitionNameId);
+
+    void getFirstMovie(MovieModel movieModel);
+
+    String getSortOrder();
 }

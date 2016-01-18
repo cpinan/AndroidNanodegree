@@ -17,7 +17,6 @@ public class DiscoverMoviesResponse {
     private int totalResults;
     private List<MovieModel> results;
 
-
     public int getPage() {
         return page;
     }
