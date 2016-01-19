@@ -104,8 +104,11 @@ public class PopularMoviesFragment extends Fragment implements PopularMoviesAdap
         discoverMoviesResponseCall.enqueue(new Callback<DiscoverMoviesResponse>() {
             @Override
             public void onResponse(Response<DiscoverMoviesResponse> response) {
-                popularMoviesAdapter.add(response.body().getResults());
-                listener.getFirstMovie(response.body().getResults().get(0));
+                List<MovieModel> movieModels = response.body().getResults();
+                if (movieModels != null && !movieModels.isEmpty()) {
+                    popularMoviesAdapter.add(response.body().getResults());
+                    listener.getFirstMovie(response.body().getResults().get(0));
+                }
             }
 
             @Override
