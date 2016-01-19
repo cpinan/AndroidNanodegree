@@ -29,6 +29,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements OnFragme
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isTwoPane = true;
         setContentView(R.layout.activity_popular_movies);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -40,8 +41,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements OnFragme
                 fragmentTransaction.replace(R.id.fragmentContainer, new PopularMoviesFragment());
                 fragmentTransaction.commit();
             }
-        } else {
-            isTwoPane = true;
         }
         sortOrderOption = getString(R.string.optionMostPopular);
     }
@@ -79,7 +78,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements OnFragme
         inflater.inflate(R.menu.menu_main, menu);
         mostPopularMenuItem = menu.findItem(R.id.mostPopularMenu);
         highestRatedMenuItem = menu.findItem(R.id.highestRatedMenu);
-        manageMenuItemStates();
         return true;
     }
 
@@ -128,7 +126,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements OnFragme
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         if (movieModel != null) {
-            outState.putSerializable(Globals.MOVIE_KEY, movieModel);
+            outState.putParcelable(Globals.MOVIE_KEY, movieModel);
         }
         outState.putString(Globals.SORT_KEY, sortOrderOption);
         super.onSaveInstanceState(outState);
@@ -140,7 +138,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements OnFragme
         if (savedInstanceState != null) {
             sortOrderOption = savedInstanceState.getString(Globals.SORT_KEY);
             if (savedInstanceState.containsKey(Globals.MOVIE_KEY)) {
-                movieModel = (MovieModel) savedInstanceState.getSerializable(Globals.MOVIE_KEY);
+                movieModel = savedInstanceState.getParcelable(Globals.MOVIE_KEY);
                 if (isTwoPane) {
                     loadMovieDetail();
                 }

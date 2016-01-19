@@ -32,7 +32,7 @@ public class DetailPopularMovieActivity extends AppCompatActivity {
         } else {
             if (savedInstanceState == null) {
                 ImageView parallaxImageView = (ImageView) findViewById(R.id.parallaxImageView);
-                MovieModel movieModel = (MovieModel) getIntent().getExtras().getSerializable(Globals.MOVIE_KEY);
+                MovieModel movieModel = getIntent().getParcelableExtra(Globals.MOVIE_KEY);
                 String backdrop = movieModel.getBackdropPath();
                 if (backdrop != null) {
                     backdrop = APIHelper.get().getImagePath(APIHelper.IMAGE_SIZE.W780, backdrop);

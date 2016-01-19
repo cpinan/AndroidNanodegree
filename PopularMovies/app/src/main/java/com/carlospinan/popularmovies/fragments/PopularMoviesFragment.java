@@ -2,8 +2,8 @@ package com.carlospinan.popularmovies.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -25,6 +25,9 @@ import com.carlospinan.popularmovies.listeners.OnFragmentInteractionListener;
 import com.carlospinan.popularmovies.models.MovieModel;
 import com.carlospinan.popularmovies.responses.DiscoverMoviesResponse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -34,18 +37,25 @@ import retrofit.Response;
  */
 public class PopularMoviesFragment extends Fragment implements PopularMoviesAdapter.PopularMoviesListener {
 
-    private int currentPage;
+    private int currentPage = 1;
     private OnFragmentInteractionListener listener;
     private PopularMoviesAdapter popularMoviesAdapter;
     private Call<DiscoverMoviesResponse> discoverMoviesResponseCall;
     private RecyclerView recyclerView;
+    private List<MovieModel> movieModelList;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        currentPage = 1;
+        movieModelList = new ArrayList<>();
+        if (savedInstanceState != null) {
+            movieModelList = savedInstanceState.getParcelableArrayList(Globals.MOVIES_ELEMENT_KEY);
+            currentPage = savedInstanceState.getInt(Globals.PAGE_KEY);
+        }
         recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_popular_movies, container, false);
-        popularMoviesAdapter = new PopularMoviesAdapter(getContext());
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) ? 2 : 3);
+        popularMoviesAdapter = new PopularMoviesAdapter(getContext(), movieModelList);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), !listener.isTwoPane() ? 2 : 3);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -59,6 +69,7 @@ public class PopularMoviesFragment extends Fragment implements PopularMoviesAdap
                     }
                 });
         popularMoviesAdapter.setListener(this);
+        discoverMovies(currentPage);
         return recyclerView;
     }
 
@@ -76,6 +87,13 @@ public class PopularMoviesFragment extends Fragment implements PopularMoviesAdap
     public void onDetach() {
         super.onDetach();
         listener = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(Globals.PAGE_KEY, currentPage);
+        outState.putParcelableArrayList(Globals.MOVIES_ELEMENT_KEY, (ArrayList<? extends Parcelable>) movieModelList);
+        super.onSaveInstanceState(outState);
     }
 
     private void discoverMovies(int page) {

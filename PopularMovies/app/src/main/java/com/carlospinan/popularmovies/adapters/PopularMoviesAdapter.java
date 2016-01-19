@@ -12,7 +12,6 @@ import com.carlospinan.popularmovies.R;
 import com.carlospinan.popularmovies.helpers.APIHelper;
 import com.carlospinan.popularmovies.models.MovieModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,8 +27,8 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<PopularMoviesAdap
     private LayoutInflater inflater;
     private PopularMoviesListener listener;
 
-    public PopularMoviesAdapter(Context context) {
-        movieModelList = new ArrayList<>();
+    public PopularMoviesAdapter(Context context, List<MovieModel> movieModelList) {
+        this.movieModelList = movieModelList;
         inflater = LayoutInflater.from(context);
     }
 
@@ -75,6 +74,10 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<PopularMoviesAdap
     public void clear() {
         this.movieModelList.clear();
         notifyDataSetChanged();
+    }
+
+    public List<MovieModel> getMovies() {
+        return movieModelList;
     }
 
     public void setListener(PopularMoviesListener listener) {

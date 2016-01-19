@@ -32,7 +32,7 @@ public class DetailPopularMovieFragment extends Fragment {
     public static DetailPopularMovieFragment newInstance(MovieModel movieModel, String transitionImageName) {
         DetailPopularMovieFragment mDetailPopularMovieFragment = new DetailPopularMovieFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Globals.MOVIE_KEY, movieModel);
+        bundle.putParcelable(Globals.MOVIE_KEY, movieModel);
         bundle.putString(Globals.TRANSITION_IMAGE_KEY, transitionImageName);
         mDetailPopularMovieFragment.setArguments(bundle);
         return mDetailPopularMovieFragment;
@@ -81,7 +81,7 @@ public class DetailPopularMovieFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null && args.containsKey(Globals.MOVIE_KEY)) {
             transitionImageName = args.getString(Globals.TRANSITION_IMAGE_KEY);
-            MovieModel movieModel = (MovieModel) args.getSerializable(Globals.MOVIE_KEY);
+            MovieModel movieModel = args.getParcelable(Globals.MOVIE_KEY);
             updateMovieDetail(movieModel);
         }
     }
