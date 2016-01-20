@@ -14,6 +14,9 @@ import com.carlospinan.popularmovies.models.MovieModel;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * @author Carlos Piñan
  */
@@ -42,8 +45,12 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<PopularMoviesAdap
         final MovieModel movieModel = movieModelList.get(position);
         if (movieModel != null && movieModel.getPosterPath() != null) {
             ImageView popularMovieImageView = holder.popularMovieImageView;
-            String imagePath = APIHelper.get().getImagePath(APIHelper.IMAGE_SIZE.W342, movieModel.getPosterPath());
-            APIHelper.get().loadImage(popularMovieImageView, imagePath);
+            if (movieModel.getPosterUri() != null) {
+
+            } else {
+                String imagePath = APIHelper.get().getImagePath(APIHelper.IMAGE_SIZE.W342, movieModel.getPosterPath());
+                APIHelper.get().loadImage(popularMovieImageView, imagePath);
+            }
             final String transitionNameId = String.format(popularMovieImageView.getContext().getString(R.string.transitionNameId), position);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 popularMovieImageView.setTransitionName(transitionNameId);
@@ -87,11 +94,12 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<PopularMoviesAdap
     // View holder
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        @Bind(R.id.popularMovieImageView)
         public ImageView popularMovieImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            popularMovieImageView = (ImageView) itemView.findViewById(R.id.popularMovieImageView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

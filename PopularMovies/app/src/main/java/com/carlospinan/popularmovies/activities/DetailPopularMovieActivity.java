@@ -40,13 +40,14 @@ public class DetailPopularMovieActivity extends AppCompatActivity {
                 } else {
                     parallaxImageView.setVisibility(View.GONE);
                 }
+                boolean loadFromDatabase = getIntent().getExtras().getBoolean(Globals.LOAD_FROM_DATABASE_KEY);
                 String transitionIdName = getIntent().getExtras().getString(Globals.TRANSITION_IMAGE_KEY);
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 setSupportActionBar(toolbar);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 getSupportActionBar().setHomeButtonEnabled(true);
-                getSupportActionBar().setTitle(R.string.movie_detail);
-                DetailPopularMovieFragment fragment = DetailPopularMovieFragment.newInstance(movieModel, transitionIdName);
+                getSupportActionBar().setTitle(movieModel.getOriginalTitle());
+                DetailPopularMovieFragment fragment = DetailPopularMovieFragment.newInstance(movieModel, transitionIdName, loadFromDatabase);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragmentContainer, fragment);

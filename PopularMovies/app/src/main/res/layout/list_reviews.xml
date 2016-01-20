@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_vertical_margin">
+
+    <TextView
+        android:id="@+id/authorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/colorPrimaryDark"
+        tools:text="Carlos Eduardo Piñan Indacochea" />
+
+    <TextView
+        android:id="@+id/contentTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/authorTextView"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:text="Mauris laoreet tortor ligula, at volutpat nulla porta id. Donec eget ultricies leo. Vivamus id lectus a orci lobortis elementum et et lectus. Etiam erat metus, aliquet ac nunc sed, sagittis luctus ligula. Nunc libero nulla, vulputate vel lorem non, vulputate tincidunt ante. Morbi hendrerit, nisi vel placerat lacinia, velit dolor mollis quam, gravida elementum eros quam eu risus. Morbi massa odio, placerat non arcu sit amet, fringilla facilisis urna." />
+
+    <TextView
+        android:id="@+id/urlTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/contentTextView"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        tools:text="http://www.google.com" />
+</RelativeLayout>

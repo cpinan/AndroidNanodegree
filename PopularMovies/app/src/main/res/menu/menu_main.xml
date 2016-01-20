@@ -11,12 +11,15 @@
         <menu>
             <item
                 android:id="@+id/mostPopularMenu"
-                android:enabled="false"
                 android:title="@string/most_popular" />
 
             <item
                 android:id="@+id/highestRatedMenu"
                 android:title="@string/highest_rated" />
+
+            <item
+                android:id="@+id/favoriteMenu"
+                android:title="@string/favorite" />
         </menu>
     </item>
 

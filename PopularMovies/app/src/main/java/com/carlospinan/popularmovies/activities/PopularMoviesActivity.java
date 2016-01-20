@@ -21,15 +21,18 @@ import com.carlospinan.popularmovies.models.MovieModel;
  */
 public class PopularMoviesActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 
-    private MovieModel movieModel;
     private boolean isTwoPane;
+    private MovieModel movieModel;
     private String sortOrderOption;
-    private MenuItem mostPopularMenuItem, highestRatedMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         isTwoPane = true;
+        sortOrderOption = Globals.SORT_MOST_POPULAR;
+        if (savedInstanceState != null) {
+            sortOrderOption = savedInstanceState.getString(Globals.SORT_KEY);
+        }
         setContentView(R.layout.activity_popular_movies);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -42,7 +45,16 @@ public class PopularMoviesActivity extends AppCompatActivity implements OnFragme
                 fragmentTransaction.commit();
             }
         }
-        sortOrderOption = getString(R.string.optionMostPopular);
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(Globals.MOVIE_KEY)) {
+                movieModel = savedInstanceState.getParcelable(Globals.MOVIE_KEY);
+                if (isTwoPane) {
+                    loadMovieDetail();
+                }
+            }
+            clearAndDiscoverMovies();
+        }
     }
 
     @Override
@@ -68,58 +80,48 @@ public class PopularMoviesActivity extends AppCompatActivity implements OnFragme
 
     @Override
     public String getSortOrder() {
-        return sortOrderOption;
+        return sortOrderOption == null ? Globals.SORT_MOST_POPULAR : sortOrderOption;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.clear();
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
-        mostPopularMenuItem = menu.findItem(R.id.mostPopularMenu);
-        highestRatedMenuItem = menu.findItem(R.id.highestRatedMenu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.mostPopularMenu || item.getItemId() == R.id.highestRatedMenu) {
-            if (item.getItemId() == R.id.mostPopularMenu) {
-                sortOrderOption = getString(R.string.optionMostPopular);
-            } else {
-                sortOrderOption = getString(R.string.optionHighestRated);
-            }
-            manageMenuItemStates();
-            return true;
+        if (item.getItemId() == R.id.mostPopularMenu) {
+            sortOrderOption = Globals.SORT_MOST_POPULAR;
+        } else if (item.getItemId() == R.id.highestRatedMenu) {
+            sortOrderOption = Globals.SORT_HIGHEST_RATED;
+        } else if (item.getItemId() == R.id.favoriteMenu) {
+            sortOrderOption = Globals.SORT_FAVORITES;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+        clearAndDiscoverMovies();
+        return true;
     }
 
-    private void manageMenuItemStates() {
-        if (mostPopularMenuItem != null && highestRatedMenuItem != null) {
-            if (sortOrderOption == null) {
-                sortOrderOption = getString(R.string.optionMostPopular);
-            }
-            boolean isMostPopular = sortOrderOption.equalsIgnoreCase(getString(R.string.optionMostPopular));
-            mostPopularMenuItem.setEnabled(!isMostPopular);
-            highestRatedMenuItem.setEnabled(isMostPopular);
-            PopularMoviesFragment fragment;
-            if (isTwoPane) {
-                fragment = (PopularMoviesFragment) getSupportFragmentManager().findFragmentById(R.id.popularMoviesFragment);
-            } else {
-                fragment = (PopularMoviesFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+    private void clearAndDiscoverMovies() {
+        PopularMoviesFragment fragment;
+        if (isTwoPane) {
+            fragment = (PopularMoviesFragment) getSupportFragmentManager().findFragmentById(R.id.popularMoviesFragment);
+        } else {
+            fragment = (PopularMoviesFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
 
-            }
-            if (fragment != null) {
-                fragment.clearAndDiscoverMovies();
-            }
+        }
+        if (fragment != null) {
+            fragment.clearAndDiscoverMovies();
         }
     }
 
     private void loadMovieDetail() {
         DetailPopularMovieFragment detailPopularMovieFragment = (DetailPopularMovieFragment) getSupportFragmentManager().findFragmentById(R.id.detailPopularMoviesFragment);
         if (detailPopularMovieFragment != null) {
-            detailPopularMovieFragment.updateMovieDetail(movieModel);
+            detailPopularMovieFragment.updateMovieDetail(movieModel, sortOrderOption.equalsIgnoreCase(Globals.SORT_FAVORITES));
         }
     }
 
@@ -132,18 +134,4 @@ public class PopularMoviesActivity extends AppCompatActivity implements OnFragme
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState != null) {
-            sortOrderOption = savedInstanceState.getString(Globals.SORT_KEY);
-            if (savedInstanceState.containsKey(Globals.MOVIE_KEY)) {
-                movieModel = savedInstanceState.getParcelable(Globals.MOVIE_KEY);
-                if (isTwoPane) {
-                    loadMovieDetail();
-                }
-            }
-            manageMenuItemStates();
-        }
-    }
 }

@@ -1,5 +1,6 @@
 package com.carlospinan.popularmovies.models;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,12 +13,12 @@ import java.util.List;
  */
 public class MovieModel implements Parcelable {
 
+    private int id;
     private boolean adult;
     @SerializedName("backdrop_path")
     private String backdropPath;
     @SerializedName("genre_ids")
     private List<Integer> genreIds;
-    private int id;
     @SerializedName("original_language")
     private String originalLanguage;
     @SerializedName("original_title")
@@ -34,6 +35,13 @@ public class MovieModel implements Parcelable {
     private double voteAverage;
     @SerializedName("vote_count")
     private int voteCount;
+
+    private Uri backdropUri;
+    private Uri posterUri;
+
+    public MovieModel() {
+
+    }
 
     protected MovieModel(Parcel in) {
         adult = in.readByte() != 0;
@@ -199,5 +207,21 @@ public class MovieModel implements Parcelable {
         dest.writeByte((byte) (video ? 1 : 0));
         dest.writeDouble(voteAverage);
         dest.writeInt(voteCount);
+    }
+
+    public Uri getBackdropUri() {
+        return backdropUri;
+    }
+
+    public void setBackdropUri(Uri backdropUri) {
+        this.backdropUri = backdropUri;
+    }
+
+    public Uri getPosterUri() {
+        return posterUri;
+    }
+
+    public void setPosterUri(Uri posterUri) {
+        this.posterUri = posterUri;
     }
 }

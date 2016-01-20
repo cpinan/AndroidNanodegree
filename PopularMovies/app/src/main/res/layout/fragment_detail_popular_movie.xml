@@ -6,20 +6,29 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/movieTitleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
+            android:background="@color/colorPrimaryDark"
             android:maxLines="3"
-            android:padding="@android:dimen/app_icon_size"
+            android:padding="16dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/white"
             android:textSize="22sp"
             tools:text="Movie name" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/favoriteFloatingButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/movieTitleTextView"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:src="@android:drawable/star_big_off" />
 
         <ImageView
             android:id="@+id/movieImageView"
@@ -75,6 +84,48 @@
             android:textColor="?attr/colorPrimaryDark"
             android:textSize="16sp"
             tools:text="Most of us can relate to kicking back on the couch and enjoying a movie with friends and family. In this project, you’ll build an app to allow users to discover the most popular movies playing." />
+
+        <TextView
+            android:id="@+id/trailersTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/synopsisTextView"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:maxLines="2"
+            android:text="@string/trailers"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?attr/colorPrimaryDark"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/trailersContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/trailersTextView"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/commentsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/trailersContainer"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:maxLines="2"
+            android:text="@string/reviews"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?attr/colorPrimaryDark"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/reviewsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/commentsTextView"
+            android:orientation="vertical" />
 
     </RelativeLayout>
 

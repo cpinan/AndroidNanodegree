@@ -19,6 +19,7 @@ import com.carlospinan.popularmovies.R;
 import com.carlospinan.popularmovies.activities.DetailPopularMovieActivity;
 import com.carlospinan.popularmovies.adapters.PopularMoviesAdapter;
 import com.carlospinan.popularmovies.helpers.APIHelper;
+import com.carlospinan.popularmovies.helpers.DatabaseHelper;
 import com.carlospinan.popularmovies.helpers.Globals;
 import com.carlospinan.popularmovies.listeners.EndlessRecyclerOnScrollListener;
 import com.carlospinan.popularmovies.listeners.OnFragmentInteractionListener;
@@ -37,18 +38,17 @@ import retrofit.Response;
  */
 public class PopularMoviesFragment extends Fragment implements PopularMoviesAdapter.PopularMoviesListener {
 
-    private int currentPage = 1;
+    private int currentPage;
+    private RecyclerView recyclerView;
     private OnFragmentInteractionListener listener;
     private PopularMoviesAdapter popularMoviesAdapter;
     private Call<DiscoverMoviesResponse> discoverMoviesResponseCall;
-    private RecyclerView recyclerView;
-    private List<MovieModel> movieModelList;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         currentPage = 1;
-        movieModelList = new ArrayList<>();
+        List<MovieModel> movieModelList = new ArrayList<>();
         if (savedInstanceState != null) {
             movieModelList = savedInstanceState.getParcelableArrayList(Globals.MOVIES_ELEMENT_KEY);
             currentPage = savedInstanceState.getInt(Globals.PAGE_KEY);
@@ -64,12 +64,16 @@ public class PopularMoviesFragment extends Fragment implements PopularMoviesAdap
                 new EndlessRecyclerOnScrollListener(gridLayoutManager) {
                     @Override
                     public void onLoadMore(int page, int totalItemsCount) {
-                        discoverMovies(++page);
-                        currentPage = page;
+                        if (!listener.getSortOrder().equalsIgnoreCase(Globals.SORT_FAVORITES)) {
+                            discoverMovies(++page);
+                            currentPage = page;
+                        }
                     }
                 });
         popularMoviesAdapter.setListener(this);
-        discoverMovies(currentPage);
+        if (savedInstanceState == null) {
+            discoverMovies(currentPage);
+        }
         return recyclerView;
     }
 
@@ -92,31 +96,36 @@ public class PopularMoviesFragment extends Fragment implements PopularMoviesAdap
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(Globals.PAGE_KEY, currentPage);
-        outState.putParcelableArrayList(Globals.MOVIES_ELEMENT_KEY, (ArrayList<? extends Parcelable>) movieModelList);
+        outState.putParcelableArrayList(Globals.MOVIES_ELEMENT_KEY, (ArrayList<? extends Parcelable>) popularMoviesAdapter.getMovies());
         super.onSaveInstanceState(outState);
     }
 
     private void discoverMovies(int page) {
-        discoverMoviesResponseCall = APIHelper.get().getRetrofitService().getMovies(
-                page,
-                listener.getSortOrder()
-        );
-        discoverMoviesResponseCall.enqueue(new Callback<DiscoverMoviesResponse>() {
-            @Override
-            public void onResponse(Response<DiscoverMoviesResponse> response) {
-                List<MovieModel> movieModels = response.body().getResults();
-                if (movieModels != null && !movieModels.isEmpty()) {
-                    popularMoviesAdapter.add(response.body().getResults());
-                    listener.getFirstMovie(response.body().getResults().get(0));
+        String sortOrder = listener.getSortOrder();
+        if (!sortOrder.equalsIgnoreCase(Globals.SORT_FAVORITES)) {
+            discoverMoviesResponseCall = APIHelper.get().getRetrofitService().getMovies(
+                    page,
+                    listener.getSortOrder()
+            );
+            discoverMoviesResponseCall.enqueue(new Callback<DiscoverMoviesResponse>() {
+                @Override
+                public void onResponse(Response<DiscoverMoviesResponse> response) {
+                    List<MovieModel> movieModels = response.body().getResults();
+                    if (movieModels != null && !movieModels.isEmpty()) {
+                        popularMoviesAdapter.add(response.body().getResults());
+                        listener.getFirstMovie(response.body().getResults().get(0));
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable t) {
+                @Override
+                public void onFailure(Throwable t) {
 
-            }
-        });
-
+                }
+            });
+        } else {
+            List<MovieModel> movieModels = DatabaseHelper.get().getMoviesFromDatabase(getActivity());
+            popularMoviesAdapter.add(movieModels);
+        }
     }
 
     @Override
@@ -124,6 +133,7 @@ public class PopularMoviesFragment extends Fragment implements PopularMoviesAdap
         listener.showMovieDetail(movieModel, transitionNameId);
         if (!listener.isTwoPane()) {
             Intent intent = new Intent(getActivity(), DetailPopularMovieActivity.class);
+            intent.putExtra(Globals.LOAD_FROM_DATABASE_KEY, listener.getSortOrder().equalsIgnoreCase(Globals.SORT_FAVORITES));
             intent.putExtra(Globals.MOVIE_KEY, movieModel);
             intent.putExtra(Globals.TRANSITION_IMAGE_KEY, transitionNameId);
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
@@ -134,17 +144,9 @@ public class PopularMoviesFragment extends Fragment implements PopularMoviesAdap
 
     public void clearAndDiscoverMovies() {
         if (popularMoviesAdapter != null) {
-            pauseRequest();
             popularMoviesAdapter.clear();
             currentPage = 1;
             discoverMovies(currentPage);
         }
     }
-
-    private void pauseRequest() {
-        if (discoverMoviesResponseCall != null) {
-            discoverMoviesResponseCall.cancel();
-        }
-    }
-
 }

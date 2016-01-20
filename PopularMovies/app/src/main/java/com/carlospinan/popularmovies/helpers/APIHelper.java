@@ -1,10 +1,13 @@
 package com.carlospinan.popularmovies.helpers;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.carlospinan.popularmovies.BuildConfig;
+import com.carlospinan.popularmovies.R;
 import com.carlospinan.popularmovies.providers.APIProvider;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
@@ -92,10 +95,41 @@ public class APIHelper {
 
     public void loadImage(ImageView imageView, String path) {
         final Context context = imageView.getContext();
+        /*
+        There is a bug using Picasso with RecyclerView. I'm working on this issue but with glide is working well.
+         */
         if (USE_PICASSO) {
-            Picasso.with(context).load(path).into(imageView);
+            Picasso.with(context).
+                    load(path).
+                    placeholder(R.color.colorPrimaryDark).
+                    error(R.drawable.placeholder_error).
+                    into(imageView);
         } else {
-            Glide.with(context).load(path).into(imageView);
+            Glide.with(context).
+                    load(path).
+                    placeholder(R.color.colorPrimaryDark).
+                    error(R.drawable.placeholder_error).
+                    into(imageView);
+        }
+    }
+
+    public String getVideoPath(String site, String key) {
+        String url = site;
+        if (site.equalsIgnoreCase("youtube")) {
+            url = String.format("https://www.youtube.com/watch?v=%s", key);
+        }
+        return url;
+    }
+
+    public void loadVideo(Context context, String site, String key) {
+        if (site != null && key != null) {
+            String url = getVideoPath(site, key);
+            if (url != null) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                intent.setData(Uri.parse(url));
+                context.startActivity(Intent.createChooser(intent, context.getString(R.string.choose)));
+            }
         }
     }
 
