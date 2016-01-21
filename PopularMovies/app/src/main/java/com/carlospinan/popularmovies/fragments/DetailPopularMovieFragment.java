@@ -188,14 +188,15 @@ public class DetailPopularMovieFragment extends Fragment {
 
     private void requestTrailersAndComments(int movieId) {
         if (!loadFromDatabase) {
-            trailersResponseCall = APIHelper.get().getRetrofitService().getTrailers(movieId, 1);
+            trailersResponseCall = APIHelper.get().getRetrofitService().getTrailers(movieId);
             trailersResponseCall.enqueue(new Callback<TrailersResponse>() {
                 @Override
                 public void onResponse(Response<TrailersResponse> response) {
-                    trailerModelList = response.body().getResults();
-                    if (!trailerModelList.isEmpty()) {
-                        fillTrailers();
-                        setShareIntent();
+                    if (response != null && response.body() != null) {
+                        trailerModelList = response.body().getResults();
+                        if (!trailerModelList.isEmpty()) {
+                            fillTrailers();
+                        }
                     }
                 }
 
@@ -203,13 +204,15 @@ public class DetailPopularMovieFragment extends Fragment {
                 public void onFailure(Throwable t) { /* UNUSED */ }
             });
 
-            reviewsResponseCall = APIHelper.get().getRetrofitService().getReviews(movieId, 1);
+            reviewsResponseCall = APIHelper.get().getRetrofitService().getReviews(movieId);
             reviewsResponseCall.enqueue(new Callback<ReviewsResponse>() {
                 @Override
                 public void onResponse(Response<ReviewsResponse> response) {
-                    reviewModelList = response.body().getResults();
-                    if (!reviewModelList.isEmpty()) {
-                        fillReviews();
+                    if (response != null && response.body() != null) {
+                        reviewModelList = response.body().getResults();
+                        if (!reviewModelList.isEmpty()) {
+                            fillReviews();
+                        }
                     }
                 }
 
@@ -222,7 +225,6 @@ public class DetailPopularMovieFragment extends Fragment {
             trailerModelList = DatabaseHelper.get().getTrailersFromDatabase(getActivity(), movieId);
             fillTrailers();
             fillReviews();
-            setShareIntent();
         }
     }
 
@@ -252,6 +254,7 @@ public class DetailPopularMovieFragment extends Fragment {
     private void setShareIntent() {
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(getShareIntent());
+            getActivity().invalidateOptionsMenu();
         }
     }
 
@@ -268,6 +271,7 @@ public class DetailPopularMovieFragment extends Fragment {
             ((TextView) view.findViewById(R.id.trailerTextView)).setText(trailerModel.getName());
             trailersContainer.addView(view);
         }
+        setShareIntent();
     }
 
     private void fillReviews() {

@@ -2,12 +2,16 @@ package com.carlospinan.popularmovies.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +22,7 @@ import android.view.ViewGroup;
 import com.carlospinan.popularmovies.R;
 import com.carlospinan.popularmovies.activities.DetailPopularMovieActivity;
 import com.carlospinan.popularmovies.adapters.PopularMoviesAdapter;
+import com.carlospinan.popularmovies.data.MovieProvider;
 import com.carlospinan.popularmovies.helpers.APIHelper;
 import com.carlospinan.popularmovies.helpers.DatabaseHelper;
 import com.carlospinan.popularmovies.helpers.Globals;
@@ -36,7 +41,9 @@ import retrofit.Response;
 /**
  * @author Carlos Piñan
  */
-public class PopularMoviesFragment extends Fragment implements PopularMoviesAdapter.PopularMoviesListener {
+public class PopularMoviesFragment extends Fragment implements PopularMoviesAdapter.PopularMoviesListener, LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final int CURSOR_LOADER_ID = 0;
 
     private int currentPage;
     private RecyclerView recyclerView;
@@ -73,6 +80,12 @@ public class PopularMoviesFragment extends Fragment implements PopularMoviesAdap
         popularMoviesAdapter.setListener(this);
         if (savedInstanceState == null) {
             discoverMovies(currentPage);
+        } else {
+            int scrollPosition = savedInstanceState.getInt(Globals.SCROLL_POSITION_KEY);
+            int count = gridLayoutManager.getChildCount();
+            if (scrollPosition != RecyclerView.NO_POSITION && scrollPosition < count) {
+                gridLayoutManager.scrollToPosition(scrollPosition);
+            }
         }
         return recyclerView;
     }
@@ -97,6 +110,10 @@ public class PopularMoviesFragment extends Fragment implements PopularMoviesAdap
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(Globals.PAGE_KEY, currentPage);
         outState.putParcelableArrayList(Globals.MOVIES_ELEMENT_KEY, (ArrayList<? extends Parcelable>) popularMoviesAdapter.getMovies());
+        if (recyclerView != null) {
+            GridLayoutManager gridLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+            outState.putInt(Globals.SCROLL_POSITION_KEY, gridLayoutManager.findFirstCompletelyVisibleItemPosition());
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -123,8 +140,7 @@ public class PopularMoviesFragment extends Fragment implements PopularMoviesAdap
                 }
             });
         } else {
-            List<MovieModel> movieModels = DatabaseHelper.get().getMoviesFromDatabase(getActivity());
-            popularMoviesAdapter.add(movieModels);
+            getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
         }
     }
 
@@ -148,5 +164,25 @@ public class PopularMoviesFragment extends Fragment implements PopularMoviesAdap
             currentPage = 1;
             discoverMovies(currentPage);
         }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(), MovieProvider.Movies.CONTENT_URI,
+                null,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        List<MovieModel> movieModels = DatabaseHelper.get().getMoviesFromCursor(data);
+        popularMoviesAdapter.add(movieModels);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        popularMoviesAdapter.clear();
     }
 }

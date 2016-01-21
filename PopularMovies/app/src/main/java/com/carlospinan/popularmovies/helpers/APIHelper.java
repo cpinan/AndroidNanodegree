@@ -102,13 +102,13 @@ public class APIHelper {
             Picasso.with(context).
                     load(path).
                     placeholder(R.color.colorPrimaryDark).
-                    error(R.drawable.placeholder_error).
+                    error(R.drawable.not_available).
                     into(imageView);
         } else {
             Glide.with(context).
                     load(path).
                     placeholder(R.color.colorPrimaryDark).
-                    error(R.drawable.placeholder_error).
+                    error(R.drawable.not_available).
                     into(imageView);
         }
     }

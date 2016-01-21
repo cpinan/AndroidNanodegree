@@ -23,13 +23,11 @@ public interface APIProvider {
 
     @GET("movie/{movieID}/videos?api_key=" + APIHelper.API_KEY)
     Call<TrailersResponse> getTrailers(
-            @Path("movieID") int movieID,
-            @Query("page") int page
+            @Path("movieID") int movieID
     );
 
     @GET("movie/{movieID}/reviews?api_key=" + APIHelper.API_KEY)
     Call<ReviewsResponse> getReviews(
-            @Path("movieID") int movieID,
-            @Query("page") int page
+            @Path("movieID") int movieID
     );
 }

@@ -204,16 +204,8 @@ public class DatabaseHelper {
         return reviewModels;
     }
 
-    public List<MovieModel> getMoviesFromDatabase(Activity activity) {
+    public List<MovieModel> getMoviesFromCursor(Cursor movieCursor) {
         List<MovieModel> movieModels = new ArrayList<>();
-        Cursor movieCursor = activity.getContentResolver().query(
-                MovieProvider.Movies.CONTENT_URI,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
         while (movieCursor.moveToNext()) {
             int originalTitleColumnIndex = movieCursor.getColumnIndex(MovieColumns._ORIGINAL_TITLE);
             int idIndex = movieCursor.getColumnIndex(MovieColumns._ID);
@@ -242,6 +234,18 @@ public class DatabaseHelper {
             movieModels.add(movieModel);
         }
         return movieModels;
+    }
+
+    public List<MovieModel> getMoviesFromDatabase(Activity activity) {
+        Cursor movieCursor = activity.getContentResolver().query(
+                MovieProvider.Movies.CONTENT_URI,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+        return getMoviesFromCursor(movieCursor);
     }
 
 }

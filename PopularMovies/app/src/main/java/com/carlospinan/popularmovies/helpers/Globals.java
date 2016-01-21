@@ -17,4 +17,5 @@ public class Globals {
     public static final String SORT_HIGHEST_RATED = "vote_count.desc";
     public static final String SORT_FAVORITES = "favorites";
 
+    public static final String SCROLL_POSITION_KEY = "scrollPositionKey";
 }
