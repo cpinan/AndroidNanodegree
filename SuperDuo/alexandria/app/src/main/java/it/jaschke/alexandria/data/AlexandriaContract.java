@@ -7,9 +7,8 @@ package it.jaschke.alexandria.data;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.util.Log;
 
-public class AlexandriaContract{
+public class AlexandriaContract {
 
     public static final String CONTENT_AUTHORITY = "it.jaschke.alexandria";
 
