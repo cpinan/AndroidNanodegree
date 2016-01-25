@@ -2,8 +2,10 @@ package it.jaschke.alexandria.services;
 
 import android.app.IntentService;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
@@ -18,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.URL;
 
 import it.jaschke.alexandria.MainActivity;
@@ -89,6 +90,9 @@ public class BookService extends IntentService {
         }
         bookEntry.close();
 
+        /**
+         * Validation to control when the app has not internet connection or the device is in airplane mode
+         */
         if (isInternetAvailable()) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -143,6 +147,10 @@ public class BookService extends IntentService {
 
             }
 
+            /**
+             * If the bookJsonString is null this can generate a crash, so to avoid this problem
+             * we prevent adding a validation here.
+             */
             if (bookJsonString != null) {
 
                 final String ITEMS = "items";
@@ -238,22 +246,17 @@ public class BookService extends IntentService {
         }
     }
 
+    /**
+     * @return
+     * @source http://stackoverflow.com/questions/9570237/android-check-internet-connection
+     */
     private boolean isInternetAvailable() {
         if (isAirplaneModeOn()) {
             return false;
         }
-        try {
-            InetAddress ipAddr = InetAddress.getByName("google.com"); //You can replace it with your name
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
-            if (ipAddr.equals("")) {
-                return false;
-            } else {
-                return true;
-            }
-
-        } catch (Exception e) {
-            return false;
-        }
+        return cm.getActiveNetworkInfo() != null;
     }
 
     private boolean isAirplaneModeOn() {

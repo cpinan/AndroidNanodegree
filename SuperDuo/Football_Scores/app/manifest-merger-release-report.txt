@@ -67,7 +67,7 @@ ADDED from AndroidManifest.xml:32:13
 		ADDED from AndroidManifest.xml:33:17
 	android:value
 		ADDED from AndroidManifest.xml:34:17
-service#barqsoft.footballscores.service.myFetchService
+service#barqsoft.footballscores.service.MyFetchService
 ADDED from AndroidManifest.xml:36:9
 	android:name
 		ADDED from AndroidManifest.xml:36:18

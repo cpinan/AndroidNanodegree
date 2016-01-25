@@ -14,6 +14,8 @@ import java.util.List;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
+ * Third party library to use the bar code scanner and launching without depending an external app.
+ *
  * @author Carlos Piñan
  * @source https://github.com/dm77/barcodescanner
  */
