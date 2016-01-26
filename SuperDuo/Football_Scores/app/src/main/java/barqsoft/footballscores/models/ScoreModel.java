@@ -29,7 +29,7 @@ public class ScoreModel {
     }
 
     public String getHomeName() {
-        return homeName;
+        return homeName == null ? "" : homeName;
     }
 
     public void setHomeName(String homeName) {
@@ -37,7 +37,7 @@ public class ScoreModel {
     }
 
     public String getAwayName() {
-        return awayName;
+        return awayName == null ? "" : awayName;
     }
 
     public void setAwayName(String awayName) {
@@ -45,7 +45,7 @@ public class ScoreModel {
     }
 
     public String getDate() {
-        return date;
+        return date == null ? "" : date;
     }
 
     public void setDate(String date) {

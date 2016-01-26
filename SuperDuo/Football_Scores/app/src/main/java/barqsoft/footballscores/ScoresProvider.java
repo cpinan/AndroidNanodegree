@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 /**
@@ -18,8 +17,6 @@ public class ScoresProvider extends ContentProvider {
     private static final int MATCHES_WITH_ID = 102;
     private static final int MATCHES_WITH_DATE = 103;
     private UriMatcher muriMatcher = buildUriMatcher();
-    private static final SQLiteQueryBuilder ScoreQuery =
-            new SQLiteQueryBuilder();
     private static final String SCORES_BY_LEAGUE = DatabaseContract.scores_table.LEAGUE_COL + " = ?";
     private static final String SCORES_BY_DATE =
             DatabaseContract.scores_table.DATE_COL + " LIKE ?";
