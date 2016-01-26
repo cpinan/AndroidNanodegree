@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/eancontainer"
             android:layout_alignStart="@+id/eancontainer"
-            android:layout_alignTop="@+id/authors"
+            android:layout_below="@id/authors"
             android:contentDescription="@string/book_cover" />
 
         <TextView

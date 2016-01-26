@@ -44,11 +44,9 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         Bundle arguments = getArguments();
         if (arguments != null) {
             ean = arguments.getString(BookDetail.EAN_KEY);
-            getLoaderManager().restartLoader(LOADER_ID, null, this);
         }
 
         rootView = inflater.inflate(R.layout.fragment_full_book, container, false);
@@ -69,9 +67,15 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.book_detail, menu);
-
         MenuItem menuItem = menu.findItem(R.id.action_share);
         shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+        /*
+        Moved here to prevent null error with the shareActionProvider and force this one is available when the cursor is ready.
+         */
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            getLoaderManager().restartLoader(LOADER_ID, null, this);
+        }
     }
 
     @Override
@@ -92,33 +96,66 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
             return;
         }
 
+        TextView bookTitleTextView = (TextView) rootView.findViewById(R.id.fullBookTitle);
         bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
-        ((TextView) rootView.findViewById(R.id.fullBookTitle)).setText(bookTitle);
+        if (bookTitle != null) {
+            bookTitleTextView.setText(bookTitle);
+            bookTitleTextView.setVisibility(View.VISIBLE);
+        } else {
+            bookTitleTextView.setVisibility(View.GONE);
+        }
 
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text) + bookTitle);
-        shareActionProvider.setShareIntent(shareIntent);
+        if (shareActionProvider != null) {
+            // It should be here to get the book title.
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+            shareIntent.setType("text/plain");
+            if (bookTitle == null) {
+                bookTitle = "";
+            }
+            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text) + bookTitle);
+            shareActionProvider.setShareIntent(shareIntent);
+        }
 
+        TextView bookSubTitleTextView = (TextView) rootView.findViewById(R.id.fullBookSubTitle);
         String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
-        ((TextView) rootView.findViewById(R.id.fullBookSubTitle)).setText(bookSubTitle);
+        if (bookSubTitle != null) {
+            bookSubTitleTextView.setText(bookSubTitle);
+            bookSubTitleTextView.setVisibility(View.VISIBLE);
+        } else {
+            bookSubTitleTextView.setVisibility(View.GONE);
+        }
 
+        TextView descriptionTextView = (TextView) rootView.findViewById(R.id.fullBookDesc);
         String desc = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.DESC));
-        ((TextView) rootView.findViewById(R.id.fullBookDesc)).setText(desc);
+        if (desc != null) {
+            descriptionTextView.setText(desc);
+            descriptionTextView.setVisibility(View.VISIBLE);
+        } else {
+            descriptionTextView.setVisibility(View.GONE);
+        }
 
+        TextView authorsTextView = (TextView) rootView.findViewById(R.id.authors);
         String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
-        String[] authorsArr = authors.split(",");
-        ((TextView) rootView.findViewById(R.id.authors)).setLines(authorsArr.length);
-        ((TextView) rootView.findViewById(R.id.authors)).setText(authors.replace(",", "\n"));
+        if (authors != null && authors.length() > 0) {
+            String[] authorsArr = authors.split(",");
+            authorsTextView.setLines(authorsArr.length);
+            authorsTextView.setText(authors.replace(",", "\n"));
+            authorsTextView.setVisibility(View.VISIBLE);
+        } else {
+            authorsTextView.setVisibility(View.GONE);
+        }
+
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
-        if (Patterns.WEB_URL.matcher(imgUrl).matches()) {
+        if (imgUrl != null && Patterns.WEB_URL.matcher(imgUrl).matches()) {
             new DownloadImage((ImageView) rootView.findViewById(R.id.fullBookCover)).execute(imgUrl);
             rootView.findViewById(R.id.fullBookCover).setVisibility(View.VISIBLE);
         }
 
         String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
-        ((TextView) rootView.findViewById(R.id.categories)).setText(categories);
+        if (categories != null) {
+            ((TextView) rootView.findViewById(R.id.categories)).setText(categories);
+        }
 
         if (rootView.findViewById(R.id.right_container) != null) {
             rootView.findViewById(R.id.backButton).setVisibility(View.INVISIBLE);

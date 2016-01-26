@@ -99,7 +99,6 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
         if (savedInstanceState != null) {
             eanEditText.setText(savedInstanceState.getString(EAN_CONTENT));
-            eanEditText.setHint("");
         }
 
         return rootView;
@@ -134,24 +133,45 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             return;
         }
 
+        TextView bookTitleTextView = (TextView) rootView.findViewById(R.id.bookTitle);
         String bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
-        ((TextView) rootView.findViewById(R.id.bookTitle)).setText(bookTitle);
+        if (bookTitle != null) {
+            bookTitleTextView.setText(bookTitle);
+            bookTitleTextView.setVisibility(View.VISIBLE);
+        } else {
+            bookTitleTextView.setVisibility(View.GONE);
+        }
 
+        TextView bookSubTitleTextView = (TextView) rootView.findViewById(R.id.bookSubTitle);
         String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
-        ((TextView) rootView.findViewById(R.id.bookSubTitle)).setText(bookSubTitle);
+        if (bookSubTitle != null) {
+            bookSubTitleTextView.setText(bookSubTitle);
+            bookSubTitleTextView.setVisibility(View.VISIBLE);
+        } else {
+            bookSubTitleTextView.setVisibility(View.GONE);
+        }
 
+        TextView authorsTextView = (TextView) rootView.findViewById(R.id.authors);
         String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
-        String[] authorsArr = authors.split(",");
-        ((TextView) rootView.findViewById(R.id.authors)).setLines(authorsArr.length);
-        ((TextView) rootView.findViewById(R.id.authors)).setText(authors.replace(",", "\n"));
+        if (authors != null && authors.length() > 0) {
+            String[] authorsArr = authors.split(",");
+            authorsTextView.setLines(authorsArr.length);
+            authorsTextView.setText(authors.replace(",", "\n"));
+            authorsTextView.setVisibility(View.VISIBLE);
+        } else {
+            authorsTextView.setVisibility(View.GONE);
+        }
+
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
-        if (Patterns.WEB_URL.matcher(imgUrl).matches()) {
+        if (imgUrl != null && Patterns.WEB_URL.matcher(imgUrl).matches()) {
             new DownloadImage((ImageView) rootView.findViewById(R.id.bookCover)).execute(imgUrl);
             rootView.findViewById(R.id.bookCover).setVisibility(View.VISIBLE);
         }
 
         String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
-        ((TextView) rootView.findViewById(R.id.categories)).setText(categories);
+        if (categories != null) {
+            ((TextView) rootView.findViewById(R.id.categories)).setText(categories);
+        }
 
         rootView.findViewById(R.id.save_button).setVisibility(View.VISIBLE);
         rootView.findViewById(R.id.delete_button).setVisibility(View.VISIBLE);
@@ -182,10 +202,11 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == getActivity().RESULT_OK) {
             if (requestCode == RESULT_CODE_SCANNING) {
-                String eanString = data.getExtras().getString("result");
-                if (eanString != null) {
-                    eanEditText.setText(eanString);
+                String eanString = "";
+                if (data != null && data.getExtras() != null) {
+                    eanString = data.getExtras().getString("result");
                 }
+                eanEditText.setText(eanString);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -193,6 +214,9 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     }
 
     private void searchBooks(String ean) {
+        if (ean == null) {
+            ean = "";
+        }
         //Once we have an ISBN, start a book intent
         Intent bookIntent = new Intent(getActivity(), BookService.class);
         bookIntent.putExtra(BookService.EAN, ean);

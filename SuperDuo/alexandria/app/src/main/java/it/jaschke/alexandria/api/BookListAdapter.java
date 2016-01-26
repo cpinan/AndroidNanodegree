@@ -44,10 +44,14 @@ public class BookListAdapter extends CursorAdapter {
         new DownloadImage(viewHolder.bookCover).execute(imgUrl);
 
         String bookTitle = cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
-        viewHolder.bookTitle.setText(bookTitle);
+        if (bookTitle != null) {
+            viewHolder.bookTitle.setText(bookTitle);
+        }
 
         String bookSubTitle = cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
-        viewHolder.bookSubTitle.setText(bookSubTitle);
+        if (bookSubTitle != null) {
+            viewHolder.bookSubTitle.setText(bookSubTitle);
+        }
     }
 
     @Override
