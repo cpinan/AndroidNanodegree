@@ -22,6 +22,7 @@
             </intent-filter>
         </activity>
 
+        <!-- Export true mandatory to be call it from Widget Service -->
         <provider
             android:name=".ScoresProvider"
             android:authorities="barqsoft.footballscores"

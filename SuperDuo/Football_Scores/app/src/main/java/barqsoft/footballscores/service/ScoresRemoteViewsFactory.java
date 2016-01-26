@@ -78,6 +78,8 @@ public class ScoresRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
         rv.setTextViewText(R.id.score_textview, scoreModel.getScore());
         rv.setImageViewResource(R.id.home_crest, scoreModel.getHomeCrestImageResource());
         rv.setImageViewResource(R.id.away_crest, scoreModel.getAwayCrestImageResource());
+        rv.setContentDescription(R.id.home_crest, scoreModel.getHomeName());
+        rv.setContentDescription(R.id.away_crest, scoreModel.getAwayName());
 
         Bundle extras = new Bundle();
         extras.putInt(ScoresWidgetProvider.EXTRA_ITEM, position);
