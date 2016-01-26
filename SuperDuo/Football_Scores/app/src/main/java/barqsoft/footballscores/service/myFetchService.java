@@ -37,9 +37,16 @@ public class MyFetchService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        getData();
+        return;
+    }
+
+    /**
+     * Created as public to call from ScoresRemoteViewsFactory.
+     */
+    public void getData() {
         getData("n2");
         getData("p2");
-        return;
     }
 
     private void getData(String timeFrame) {

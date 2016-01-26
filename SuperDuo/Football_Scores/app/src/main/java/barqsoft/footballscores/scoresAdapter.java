@@ -47,7 +47,7 @@ public class ScoresAdapter extends CursorAdapter {
 
         mHolder.home_name.setText(home_name);
         mHolder.away_name.setText(away_name);
-        mHolder.date.setText(cursor.getString(COL_MATCHTIME));
+        mHolder.date.setText(cursor.getString(COL_DATE));
         mHolder.score.setText(Utilies.getScores(cursor.getInt(COL_HOME_GOALS), cursor.getInt(COL_AWAY_GOALS)));
         mHolder.match_id = cursor.getDouble(COL_ID);
         mHolder.home_crest.setImageResource(Utilies.getTeamCrestByTeamName(
