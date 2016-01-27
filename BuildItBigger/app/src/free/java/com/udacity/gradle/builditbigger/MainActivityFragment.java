@@ -18,6 +18,7 @@ import com.udacity.gradle.builditbigger.listeners.OnFragmentListener;
  */
 public class MainActivityFragment extends Fragment implements OnFragmentListener {
 
+    private boolean wait;
     private InterstitialAd mInterstitialAd;
     private OnActivityListener listener;
 
@@ -47,16 +48,22 @@ public class MainActivityFragment extends Fragment implements OnFragmentListener
 
     @Override
     public void onCallFragment() {
+        wait = false;
         if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
-        } else if (listener != null) {
-            listener.onCallJoke();
+        } else {
+            wait = true;
         }
     }
 
     @Override
     public void onForceFinish() {
-        // Unused
+        if (wait) {
+            if (listener != null) {
+                listener.onCallJoke();
+            }
+            wait = false;
+        }
     }
 
     private void requestNewInterstitial() {

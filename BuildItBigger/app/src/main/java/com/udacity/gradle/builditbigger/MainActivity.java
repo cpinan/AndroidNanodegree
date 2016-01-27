@@ -1,7 +1,6 @@
 package com.udacity.gradle.builditbigger;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -42,15 +41,6 @@ public class MainActivity extends AppCompatActivity implements JokeListener, OnA
     public void onResult(String joke) {
         this.joke = joke;
         fragment.onForceFinish();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (jokesAsyncTask != null && jokesAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
-            jokesAsyncTask.cancel(true);
-            jokesAsyncTask = null;
-        }
     }
 
     @Override
