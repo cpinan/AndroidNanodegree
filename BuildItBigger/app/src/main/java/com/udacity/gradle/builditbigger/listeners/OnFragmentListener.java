@@ -5,4 +5,5 @@ package com.udacity.gradle.builditbigger.listeners;
  */
 public interface OnFragmentListener {
     void onCallFragment();
+    void onForceFinish();
 }

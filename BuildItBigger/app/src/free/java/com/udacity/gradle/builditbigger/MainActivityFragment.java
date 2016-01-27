@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
+import com.udacity.gradle.builditbigger.listeners.OnActivityListener;
 import com.udacity.gradle.builditbigger.listeners.OnFragmentListener;
 
 
@@ -18,15 +18,13 @@ import com.udacity.gradle.builditbigger.listeners.OnFragmentListener;
  */
 public class MainActivityFragment extends Fragment implements OnFragmentListener {
 
-    private AdView mAdView;
     private InterstitialAd mInterstitialAd;
+    private OnActivityListener listener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
-        mAdView = (AdView) root.findViewById(R.id.adView);
-
         mInterstitialAd = new InterstitialAd(getActivity());
         mInterstitialAd.setAdUnitId(getString(R.string.adUnitId));
 
@@ -34,30 +32,31 @@ public class MainActivityFragment extends Fragment implements OnFragmentListener
             @Override
             public void onAdClosed() {
                 requestNewInterstitial();
+                if (listener != null) {
+                    listener.onCallJoke();
+                }
             }
         });
-
-        mAdView.setVisibility(View.GONE);
+        requestNewInterstitial();
         return root;
     }
 
+    public void setListener(OnActivityListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public void onCallFragment() {
         if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
-        } else {
-            mAdView.setVisibility(View.VISIBLE);
+        } else if (listener != null) {
+            listener.onCallJoke();
         }
     }
 
-
     @Override
-    public void onResume() {
-        super.onResume();
-        if (mAdView != null && mAdView.getVisibility() == View.VISIBLE) {
-            mAdView.setVisibility(View.GONE);
-        }
+    public void onForceFinish() {
+        // Unused
     }
 
     private void requestNewInterstitial() {
@@ -65,7 +64,6 @@ public class MainActivityFragment extends Fragment implements OnFragmentListener
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .build();
         mInterstitialAd.loadAd(adRequest);
-        mAdView.loadAd(adRequest);
     }
 
 }

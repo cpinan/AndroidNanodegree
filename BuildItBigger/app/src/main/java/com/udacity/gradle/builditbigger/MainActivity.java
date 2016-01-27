@@ -9,11 +9,13 @@ import android.widget.ProgressBar;
 
 import com.carlospinan.builditbiggerandroidlibrary.JokeActivity;
 import com.udacity.gradle.builditbigger.listeners.JokeListener;
+import com.udacity.gradle.builditbigger.listeners.OnActivityListener;
 import com.udacity.gradle.builditbigger.tasks.JokesAsyncTask;
 
 
-public class MainActivity extends AppCompatActivity implements JokeListener {
+public class MainActivity extends AppCompatActivity implements JokeListener, OnActivityListener {
 
+    private String joke;
     private ProgressBar progressBar;
     private JokesAsyncTask jokesAsyncTask;
     private MainActivityFragment fragment;
@@ -24,28 +26,22 @@ public class MainActivity extends AppCompatActivity implements JokeListener {
         setContentView(R.layout.activity_main);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         fragment = (MainActivityFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
+        fragment.setListener(this);
     }
 
     public void tellJoke(View view) {
-        if (fragment != null) {
-            fragment.onCallFragment();
-        }
         progressBar.setVisibility(View.VISIBLE);
         jokesAsyncTask = new JokesAsyncTask(this);
         jokesAsyncTask.execute();
-//        String joke = MyJavaLibrary.getJoke();
-//        Toast.makeText(this, joke, Toast.LENGTH_LONG).show();
-//        Intent intent = new Intent(this, JokeActivity.class);
-//        intent.putExtra(JokeActivity.JOKE_KEY, joke);
-//        startActivity(intent);
+        if (fragment != null) {
+            fragment.onCallFragment();
+        }
     }
 
     @Override
     public void onResult(String joke) {
-        progressBar.setVisibility(View.GONE);
-        Intent intent = new Intent(this, JokeActivity.class);
-        intent.putExtra(JokeActivity.JOKE_KEY, joke);
-        startActivity(intent);
+        this.joke = joke;
+        fragment.onForceFinish();
     }
 
     @Override
@@ -55,5 +51,13 @@ public class MainActivity extends AppCompatActivity implements JokeListener {
             jokesAsyncTask.cancel(true);
             jokesAsyncTask = null;
         }
+    }
+
+    @Override
+    public void onCallJoke() {
+        progressBar.setVisibility(View.GONE);
+        Intent intent = new Intent(this, JokeActivity.class);
+        intent.putExtra(JokeActivity.JOKE_KEY, joke);
+        startActivity(intent);
     }
 }
