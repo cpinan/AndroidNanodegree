@@ -1,47 +1,59 @@
 package com.udacity.gradle.builditbigger;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.ProgressBar;
+
+import com.carlospinan.builditbiggerandroidlibrary.JokeActivity;
+import com.udacity.gradle.builditbigger.listeners.JokeListener;
+import com.udacity.gradle.builditbigger.tasks.JokesAsyncTask;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity implements JokeListener {
+
+    private ProgressBar progressBar;
+    private JokesAsyncTask jokesAsyncTask;
+    private MainActivityFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        fragment = (MainActivityFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public void tellJoke(View view) {
+        progressBar.setVisibility(View.VISIBLE);
+        jokesAsyncTask = new JokesAsyncTask(this);
+        jokesAsyncTask.execute();
+//        String joke = MyJavaLibrary.getJoke();
+//        Toast.makeText(this, joke, Toast.LENGTH_LONG).show();
+//        Intent intent = new Intent(this, JokeActivity.class);
+//        intent.putExtra(JokeActivity.JOKE_KEY, joke);
+//        startActivity(intent);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    public void onResult(String joke) {
+        if (fragment != null) {
+            fragment.onCallFragment();
         }
-
-        return super.onOptionsItemSelected(item);
+        progressBar.setVisibility(View.GONE);
+        Intent intent = new Intent(this, JokeActivity.class);
+        intent.putExtra(JokeActivity.JOKE_KEY, joke);
+        startActivity(intent);
     }
 
-    public void tellJoke(View view){
-        Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (jokesAsyncTask != null && jokesAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
+            jokesAsyncTask.cancel(true);
+            jokesAsyncTask = null;
+        }
     }
-
-
 }

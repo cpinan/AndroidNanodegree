@@ -17,3 +17,17 @@ allprojects {
         jcenter()
     }
 }
+
+task testCDE {
+    tasks.getByPath(":backend:appengineRun")
+    tasks.getByPath(":backend:appengineStop")
+}
+
+task runAllTests {
+    tasks.getByPath(":backend:appengineRun")
+    tasks.getByPath(":app:test")
+    tasks.getByPath(":backend:appengineStop")
+    doLast {
+        println "Finishing Test"
+    }
+}
