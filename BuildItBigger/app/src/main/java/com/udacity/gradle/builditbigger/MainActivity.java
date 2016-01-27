@@ -27,6 +27,9 @@ public class MainActivity extends AppCompatActivity implements JokeListener {
     }
 
     public void tellJoke(View view) {
+        if (fragment != null) {
+            fragment.onCallFragment();
+        }
         progressBar.setVisibility(View.VISIBLE);
         jokesAsyncTask = new JokesAsyncTask(this);
         jokesAsyncTask.execute();
@@ -39,9 +42,6 @@ public class MainActivity extends AppCompatActivity implements JokeListener {
 
     @Override
     public void onResult(String joke) {
-        if (fragment != null) {
-            fragment.onCallFragment();
-        }
         progressBar.setVisibility(View.GONE);
         Intent intent = new Intent(this, JokeActivity.class);
         intent.putExtra(JokeActivity.JOKE_KEY, joke);
