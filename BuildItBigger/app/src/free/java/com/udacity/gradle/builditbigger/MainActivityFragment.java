@@ -6,9 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-
+import com.google.android.gms.ads.InterstitialAd;
 import com.udacity.gradle.builditbigger.listeners.OnFragmentListener;
 
 
@@ -18,20 +19,24 @@ import com.udacity.gradle.builditbigger.listeners.OnFragmentListener;
 public class MainActivityFragment extends Fragment implements OnFragmentListener {
 
     private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
-
         mAdView = (AdView) root.findViewById(R.id.adView);
-        // Create an ad request. Check logcat output for the hashed device ID to
-        // get test ads on a physical device. e.g.
-        // "Use AdRequest.Builder.addTestDevice("ABCDEF012345") to get test ads on this device."
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-        mAdView.loadAd(adRequest);
+
+        mInterstitialAd = new InterstitialAd(getActivity());
+        mInterstitialAd.setAdUnitId(getString(R.string.adUnitId));
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewInterstitial();
+            }
+        });
+
         mAdView.setVisibility(View.GONE);
         return root;
     }
@@ -39,7 +44,11 @@ public class MainActivityFragment extends Fragment implements OnFragmentListener
 
     @Override
     public void onCallFragment() {
-        mAdView.setVisibility(View.VISIBLE);
+        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            mAdView.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -49,6 +58,14 @@ public class MainActivityFragment extends Fragment implements OnFragmentListener
         if (mAdView != null && mAdView.getVisibility() == View.VISIBLE) {
             mAdView.setVisibility(View.GONE);
         }
+    }
+
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mInterstitialAd.loadAd(adRequest);
+        mAdView.loadAd(adRequest);
     }
 
 }

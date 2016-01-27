@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Build it Bigger - Free</string>
+    <!-- Built it Bigger INT -->
+    <string name="adUnitId" translatable="false">ca-app-pub-8297579382369512/9635681998</string>
 </resources>
