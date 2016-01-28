@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:icon="@drawable/ic_home_black_24dp"
+            android:tint="@color/button_grey"
+            android:title="One" />
+        <item
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:tint="@color/button_grey"
+            android:title="Two" />
+        <item
+            android:icon="@drawable/ic_bookmark_border_black_24dp"
+            android:tint="@color/button_grey"
+            android:title="Three">
+            <menu>
+                <item
+                    android:id="@+id/navigation_sub_item_1"
+                    android:icon="@drawable/ic_share_black_24dp"
+                    android:title="3.1" />
+                <item
+                    android:id="@+id/navigation_sub_item_2"
+                    android:icon="@drawable/ic_add_white_24dp"
+                    android:title="3.2" />
+            </menu>
+        </item>
+    </group>
+</menu><!-- From: file:/Users/carlos.indacochea/Documents/codelabs/android-design-library-master/1-Base/src/main/res/menu/menu_navigation.xml -->

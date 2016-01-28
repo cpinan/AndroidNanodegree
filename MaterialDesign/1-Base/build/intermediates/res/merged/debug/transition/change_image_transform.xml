@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
+    <changeBounds />
+    <explode />
+</transitionSet><!-- From: file:/Users/carlos.indacochea/Documents/codelabs/android-design-library-master/1-Base/src/main/res/transition/change_image_transform.xml -->
