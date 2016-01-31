@@ -1,2 +1,20 @@
 
 PopularMovies/gradle.properties
+
+xyzreader/XYZReader/build/outputs/logs/manifest-merger-debug-report.txt
+
+xyzreader/XYZReader/build/intermediates/res/debug/values-zu/values.xml
+
+xyzreader/XYZReader/build
+xyzreader/.gradle
+
+xyzreader/.gradle/2.2/taskArtifacts/taskArtifacts.bin
+
+xyzreader/.gradle/2.2/taskArtifacts/cache.properties.lock
+
+xyzreader/.gradle/2.2/taskArtifacts/cache.properties.lock
+
+xyzreader/.gradle/2.2/taskArtifacts/fileHashes.bin
+
+xyzreader/.gradle/2.2/taskArtifacts/fileSnapshots.bin
+GoUbiquitous/build
