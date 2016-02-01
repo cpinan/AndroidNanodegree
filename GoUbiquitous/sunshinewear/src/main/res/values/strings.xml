@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SunshineWear</string>
+    <string name="sunshine_watchface">Sunshine Watchface</string>
+    <string name="my_analog_name">My Analog</string>
+</resources>
