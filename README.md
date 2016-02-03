@@ -12,5 +12,9 @@ In the current repository you can find:
 
 4. Build it Bigger: An app the shows you how to integrate Android Module, GCM Module and a Java Module with the default app module.
 
+5. Materialize your App.
+
+6. Go Ubiquitous 
+
 
 And more is comming...
